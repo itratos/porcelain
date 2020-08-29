@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/robertgzr/porcelain"
+	"github.com/itratos/porcelain"
 	"io"
 	"io/ioutil"
 	"log"
