@@ -1,3 +1,5 @@
 porcelain
+!cmd/porcelain
 porcelain.1
 dist/
+.idea

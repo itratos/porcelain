@@ -1,4 +1,4 @@
-package main
+package porcelain
 
 import (
 	"bytes"
@@ -58,8 +58,8 @@ func IsInsideWorkTree(cwd string) (bool, error) {
 
 	out, err := cmd.Output()
 	if err != nil {
-		if exiterr, ok := err.(*exec.ExitError); ok {
-			if status, ok := exiterr.Sys().(syscall.WaitStatus); ok {
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			if status, ok := exitErr.Sys().(syscall.WaitStatus); ok {
 				if status.ExitStatus() == 128 {
 					return false, ErrNotAGitRepo
 				}

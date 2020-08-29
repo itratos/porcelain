@@ -1,4 +1,4 @@
-package main
+package porcelain
 
 import (
 	"bytes"
@@ -9,6 +9,23 @@ import (
 	"path"
 
 	"github.com/robertgzr/color"
+)
+
+var (
+	Commit  string = "invalid"
+	Version string = "invalid"
+	Date    string = "invalid"
+)
+
+var (
+	Cwd         string
+	NoColorFlag bool
+	FmtFlag     bool
+	DebugFlag   bool
+	ZshFmtFlag  bool
+	BashFmtFlag bool
+	TmuxFmtFlag bool
+	VersionFlag bool
 )
 
 type GitArea struct {
@@ -60,7 +77,7 @@ func (pi *PorcInfo) hasUnmerged() bool {
 	if pi.unmerged > 0 {
 		return true
 	}
-	gitDir, err := PathToGitDir(cwd)
+	gitDir, err := PathToGitDir(Cwd)
 	if err != nil {
 		log.Printf("error calling PathToGitDir: %s", err)
 		return false
@@ -105,13 +122,13 @@ func (pi *PorcInfo) Fmt() string {
 		behindArrow    string = "↓"
 	)
 
-	if noColorFlag {
+	if NoColorFlag {
 		color.NoColor = true
 	} else {
 		color.NoColor = false
-		color.EscapeBashPrompt = bashFmtFlag
-		color.EscapeZshPrompt = zshFmtFlag
-		color.TmuxMode = tmuxFmtFlag
+		color.EscapeBashPrompt = BashFmtFlag
+		color.EscapeZshPrompt = ZshFmtFlag
+		color.TmuxMode = TmuxFmtFlag
 	}
 	branchFmt := color.New(color.FgBlue).SprintFunc()
 	commitFmt := color.New(color.FgGreen, color.Italic).SprintFunc()
@@ -177,8 +194,8 @@ func (pi *PorcInfo) Fmt() string {
 	)
 }
 
-func run() *PorcInfo {
-	gitOut, err := GetGitOutput(cwd)
+func Run() *PorcInfo {
+	gitOut, err := GetGitOutput(Cwd)
 	if err != nil {
 		log.Printf("error: %s", err)
 		if err == ErrNotAGitRepo {
@@ -189,7 +206,7 @@ func run() *PorcInfo {
 	}
 
 	var porcInfo = new(PorcInfo)
-	porcInfo.workingDir = cwd
+	porcInfo.workingDir = Cwd
 
 	if err := porcInfo.ParsePorcInfo(gitOut); err != nil {
 		log.Printf("error: %s", err)

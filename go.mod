@@ -1,6 +1,6 @@
 module github.com/robertgzr/porcelain
 
-go 1.13
+go 1.15
 
 require (
 	github.com/mattn/go-isatty v0.0.12 // indirect

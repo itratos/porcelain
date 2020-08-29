@@ -1,12 +1,15 @@
-package main
+package porcelain
 
 import (
+	"fmt"
+	"log"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
 )
 
-const gitoutput string = `
+const gitOutput string = `
 # branch.oid 51c9c58e2175b768137c1e38865f394c76a7d49d
 # branch.head master
 # branch.upstream origin/master
@@ -51,11 +54,31 @@ var expectedPorcInfo = PorcInfo{
 
 func TestParsePorcInfo(t *testing.T) {
 	var pi = new(PorcInfo)
-	if err := pi.ParsePorcInfo(strings.NewReader(gitoutput)); err != nil {
+	if err := pi.ParsePorcInfo(strings.NewReader(gitOutput)); err != nil {
 		t.Fatal(err)
 	}
 	if !reflect.DeepEqual(&expectedPorcInfo, pi) {
 		t.Logf("%#+v\n", pi)
 		t.FailNow()
 	}
+}
+
+func TestParseGetGitOutput(t *testing.T) {
+	cwd, _ := os.Getwd()
+	gitOut, err := GetGitOutput(cwd)
+	if err != nil {
+		log.Printf("error: %s", err)
+		if err == ErrNotAGitRepo {
+			os.Exit(0)
+		}
+		fmt.Printf("error: %s", err)
+		os.Exit(1)
+	}
+
+	var pi = new(PorcInfo)
+	if err := pi.ParsePorcInfo(gitOut); err != nil {
+		t.Fatal(err)
+	}
+	// Print parse results
+	pi.Fmt()
 }

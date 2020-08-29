@@ -1,4 +1,4 @@
-package main
+package porcelain
 
 import (
 	"strings"
@@ -9,7 +9,7 @@ const expectedFmtOutput = ` [34mmaster[0m@[32;3m51c9c58[0m [2;43;30m ↑
 
 func TestFmtOutput(t *testing.T) {
 	var pi = new(PorcInfo)
-	if err := pi.ParsePorcInfo(strings.NewReader(gitoutput)); err != nil {
+	if err := pi.ParsePorcInfo(strings.NewReader(gitOutput)); err != nil {
 		t.Fatal(err)
 	}
 
