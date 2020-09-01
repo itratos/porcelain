@@ -29,52 +29,52 @@ var (
 )
 
 type GitArea struct {
-	modified int
-	added    int
-	deleted  int
-	renamed  int
-	copied   int
+	Modified int
+	Added    int
+	Deleted  int
+	Renamed  int
+	Copied   int
 }
 
 func (a *GitArea) hasChanged() bool {
 	var changed bool
-	if a.added != 0 {
+	if a.Added != 0 {
 		changed = true
 	}
-	if a.deleted != 0 {
+	if a.Deleted != 0 {
 		changed = true
 	}
-	if a.modified != 0 {
+	if a.Modified != 0 {
 		changed = true
 	}
-	if a.copied != 0 {
+	if a.Copied != 0 {
 		changed = true
 	}
-	if a.renamed != 0 {
+	if a.Renamed != 0 {
 		changed = true
 	}
 	return changed
 }
 
 type PorcInfo struct {
-	workingDir string
+	WorkingDir string
 
-	branch   string
-	commit   string
-	remote   string
-	upstream string
-	ahead    int
-	behind   int
+	Branch   string
+	Commit   string
+	Remote   string
+	Upstream string
+	Ahead    int
+	Behind   int
 
-	untracked int
-	unmerged  int
+	Untracked int
+	Unmerged  int
 
 	Unstaged GitArea
 	Staged   GitArea
 }
 
 func (pi *PorcInfo) hasUnmerged() bool {
-	if pi.unmerged > 0 {
+	if pi.Unmerged > 0 {
 		return true
 	}
 	gitDir, err := PathToGitDir(Cwd)
@@ -146,26 +146,26 @@ func (pi *PorcInfo) Fmt() string {
 
 	return fmt.Sprintf("%s %s@%s %s %s %s",
 		branchGlyph,
-		branchFmt(pi.branch),
+		branchFmt(pi.Branch),
 		func() string {
-			if pi.commit == "(initial)" {
-				return commitFmt(pi.commit)
+			if pi.Commit == "(initial)" {
+				return commitFmt(pi.Commit)
 			}
-			return commitFmt(pi.commit[:7])
+			return commitFmt(pi.Commit[:7])
 		}(),
 		func() string {
 			var buf bytes.Buffer
-			if pi.ahead > 0 {
-				buf.WriteString(aheadFmt(" ", aheadArrow, pi.ahead, " "))
+			if pi.Ahead > 0 {
+				buf.WriteString(aheadFmt(" ", aheadArrow, pi.Ahead, " "))
 			}
-			if pi.behind > 0 {
-				buf.WriteString(behindFmt(" ", behindArrow, pi.behind, " "))
+			if pi.Behind > 0 {
+				buf.WriteString(behindFmt(" ", behindArrow, pi.Behind, " "))
 			}
 			return buf.String()
 		}(),
 		func() string {
 			var buf bytes.Buffer
-			if pi.untracked > 0 {
+			if pi.Untracked > 0 {
 				buf.WriteString(untrackedFmt(untrackedGlyph))
 			} else {
 				buf.WriteRune(' ')
@@ -206,7 +206,7 @@ func Run() *PorcInfo {
 	}
 
 	var porcInfo = new(PorcInfo)
-	porcInfo.workingDir = Cwd
+	porcInfo.WorkingDir = Cwd
 
 	if err := porcInfo.ParsePorcInfo(gitOut); err != nil {
 		log.Printf("error: %s", err)

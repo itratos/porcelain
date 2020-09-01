@@ -46,9 +46,9 @@ func (pi *PorcInfo) ParseLine(line string) error {
 		case "2":
 			pi.parseRenamedFile(s)
 		case "u":
-			pi.unmerged++
+			pi.Unmerged++
 		case "?":
-			pi.untracked++
+			pi.Untracked++
 		}
 	}
 	return nil
@@ -59,11 +59,11 @@ func (pi *PorcInfo) parseBranchInfo(s *bufio.Scanner) (err error) {
 	for s.Scan() {
 		switch s.Text() {
 		case "branch.oid":
-			pi.commit = consumeNext(s)
+			pi.Commit = consumeNext(s)
 		case "branch.head":
-			pi.branch = consumeNext(s)
+			pi.Branch = consumeNext(s)
 		case "branch.upstream":
-			pi.upstream = consumeNext(s)
+			pi.Upstream = consumeNext(s)
 		case "branch.ab":
 			err = pi.parseAheadBehind(s)
 		}
@@ -81,9 +81,9 @@ func (pi *PorcInfo) parseAheadBehind(s *bufio.Scanner) error {
 
 		switch s.Text()[:1] {
 		case "+":
-			pi.ahead = i
+			pi.Ahead = i
 		case "-":
-			pi.behind = i
+			pi.Behind = i
 		}
 	}
 	return nil
@@ -126,28 +126,28 @@ func (pi *PorcInfo) parseTrackedFile(s *bufio.Scanner) error {
 func (pi *PorcInfo) parseXY(xy string) error {
 	switch xy[:1] { // parse staged
 	case "M":
-		pi.Staged.modified++
+		pi.Staged.Modified++
 	case "A":
-		pi.Staged.added++
+		pi.Staged.Added++
 	case "D":
-		pi.Staged.deleted++
+		pi.Staged.Deleted++
 	case "R":
-		pi.Staged.renamed++
+		pi.Staged.Renamed++
 	case "C":
-		pi.Staged.copied++
+		pi.Staged.Copied++
 	}
 
 	switch xy[1:] { // parse unstaged
 	case "M":
-		pi.Unstaged.modified++
+		pi.Unstaged.Modified++
 	case "A":
-		pi.Unstaged.added++
+		pi.Unstaged.Added++
 	case "D":
-		pi.Unstaged.deleted++
+		pi.Unstaged.Deleted++
 	case "R":
-		pi.Unstaged.renamed++
+		pi.Unstaged.Renamed++
 	case "C":
-		pi.Unstaged.copied++
+		pi.Unstaged.Copied++
 	}
 	return nil
 }
